@@ -1,0 +1,55 @@
+Данный код выполняет вставку объекта типа "KeyValuePair" в массив "a" таким образом, что массив "а" остается отсортированным по значениям "key" (Если он изначально вообще был отсортирован). 
+Изначально в функции "Func2" проверяется размер массива "a". Если массив пуст,то в него добавляется элемент "KeyValuePair" и функция 
+заканчивает работу. Если же массив не пуст, то сначала проверяется принадлежность значения "key" диапозону a[0].Key-a[a.Length - 1].Key. Если значение "key"
+меньше значения "key" нулевого элемента массива, то переменная pos становится равна 0. Если же значение "key"
+больше значения "key" последнего элемента массива, то переменная pos становится равна длине массива. Если значение "key" входит в диапозон, то
+вызывается функция "Func1", осуществляющая бинарный поиск и возвращающая позицию, в которую необходимо поместить элемент "KeyValuePair" с заданным значением "key".
+После получения этой позиции, массив увеличивают на 1 элемент и "смещают" в цикле все элементы массива "a" вправо,а в позицию "pos" помещают новый элемент "KeyValuePair", содержащий
+заданный "key" и "value".
+
+Оптимизация:
+1. В функции "Func1" переменной "middle" можно присваивать значение уже после первого return:
+static int Func1(KeyValuePair<int, string>[] a, int low, int high, int key)
+{
+  
+  if (low == high)
+    return low;
+int middle = low + ((high - low)/2);
+ 
+  if (key > a[middle].Key)
+    return Func1(a, middle + 1, high, key);		
+ 
+  return Func1(a, low, middle, key);
+}
+2. Можно не использовать рекурсии при бинарном поиске:
+ while (true)
+    {
+        if (high - low == 1)
+        {
+            if (key==a[low].key)
+                return low;
+            return high;
+        }
+        else
+        {
+            var middle = low + (high - low) / 2;
+            if (a[middle].key==key)
+                return middle;
+            if (a[middle].key<key)
+                low = middle;
+            if (a[middle].key>key)
+                high = middle;
+        }
+    }
+
+3. Нет смысла создавать элемент "keyValuePair":
+static void Func2(ref KeyValuePair<int, string>[] a, int key, string value)
+{
+  int pos;
+  
+  if (a.Length == 0)
+  {
+    Array.Resize(ref a, 1);
+    a[0] = new KeyValuePair<int, string>(key, value);
+    return;
+  }

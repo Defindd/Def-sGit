@@ -217,8 +217,7 @@ namespace TestDirectum
         static void Main(string[] args)
         {
             string jsonString = File.ReadAllText("test.json",Encoding.Default);//необходимо указать путь к файлу
-            var Form = new Root();
-            Form = JsonSerializer.Deserialize<Root>(jsonString);
+            Root Form = JsonSerializer.Deserialize<Root>(jsonString);
             StartHTMLForm(Form.form.name);
             for (int i = 0; i < Form.form.items.Count; i++)
             {
